@@ -1,0 +1,25 @@
+#board {
+	display: grid;
+	grid-gap: 5px;
+	grid-template-rows:
+		100px 100px 100px 100px 100px 100px;
+	grid-template-columns:
+		100px 100px 100px 100px 100px 100px 100px;
+}
+
+#markers {
+	display: grid;
+	grid-gap: 5px;
+	grid-template-rows:
+		30px;
+	grid-template-columns:
+		100px 100px 100px 100px 100px 100px 100px;
+}
+
+.box {
+	background: lightgrey;
+}
+
+.box:hover {
+	background: grey;
+}
