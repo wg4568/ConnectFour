@@ -1,9 +1,33 @@
 $(function() {
 
+	var connectiondiv = $('#connection');
 	var board = $('#board');
-	var markers = $('#markers').children();
+	var markerdiv = $('#markers');
+
+	var markers = markerdiv.children();
 	var children = board.children();
-	console.log(children);
+
+	board.hide();
+	markerdiv.hide();
+
+	// $('#game').keyup(function() {
+	// 	var value = $('#game').val();
+	// 	var button = $('#connect');
+		
+	// 	if (network.isGame(value)) {
+	// 		button.html("Connect to game");
+	// 	} else {
+	// 		button.html("Create new game");
+	// 	}
+
+	// });
+
+	$('#connect').click(function() {
+		// pass
+	});
+
+
+
 
 	children.each(function(idx, child) {
 		$(child).attr('index', idx);
@@ -11,13 +35,12 @@ $(function() {
 
 	children.click(function(event) {
 		var posn = getCoord(event.target);
-		var col = `rgb(${Math.floor(Math.random()*255)}, 0, 0)`;
-		console.log(col);
+		var col = Math.random() > 0.5 ? 'red' : 'blue';
 
 		placeDisk(posn, col);
 	});
 
-	children.hover(function(event) {
+	children.mouseover(function(event) {
 		var posn = getCoord(event.target);
 		setMarker(posn.x);
 	});
@@ -37,12 +60,11 @@ $(function() {
 		var element = children[(posn.y * 7) + posn.x];
 		var circle = $('<div></div>')[0];
 
-		// $(circle).mouseover(function(event) {
-		// 	var parent = $(event.target.parentElement);
-		// 	var posn = getCoord(parent);
-		// 	console.log(posn);
-		// 	setMarker(posn.x);
-		// });
+		$(circle).mouseover(function(event) {
+			var parent = $(event.target.parentElement);
+			var posn = getCoord(parent);
+			setMarker(posn.x);
+		});
 
 		circle.style['background'] = color;
 		$(circle).attr('class', 'circle');
@@ -51,6 +73,8 @@ $(function() {
 	}
 
 	function setMarker(position) {
+		if (isNaN(position)) return;
+
 		$(markers).empty();
 
 		var element = $(markers[position])

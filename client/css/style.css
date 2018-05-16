@@ -1,0 +1,20 @@
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 400;
+	src: local('res/Roboto-Regular.ttf');
+	unicode-range: U+0370-03FF;
+}
+
+#connection {
+	font-family: 'Roboto', sans-serif;
+	margin: 20px;
+}
+
+.connection-input {
+	width: 300px;
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
