@@ -38,7 +38,9 @@ $(function() {
 			$('#connect').removeAttr('disabled');
 			$('#connect').html('Connect');
 			if (success) {
-				// pass
+				board.show();
+				markerdiv.show();
+				connectiondiv.hide();
 			} else {
 				status.show();
 				if (error == null) {
