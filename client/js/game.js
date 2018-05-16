@@ -3,12 +3,17 @@ $(function() {
 	var connectiondiv = $('#connection');
 	var board = $('#board');
 	var markerdiv = $('#markers');
+	
+	var status = $('#status');
+	var statusmsg = $('#message');
 
 	var markers = markerdiv.children();
 	var children = board.children();
+	var network = null;
 
 	board.hide();
 	markerdiv.hide();
+	status.hide();
 
 	// $('#game').keyup(function() {
 	// 	var value = $('#game').val();
@@ -23,7 +28,26 @@ $(function() {
 	// });
 
 	$('#connect').click(function() {
-		// pass
+		var server = $('#server').val();
+		var game = $('#game').val();
+
+		$('#connect').html('Connecting...');
+		$('#connect').attr('disabled', 'disabled')
+
+		network = new Network(server, function(success, network, error) {
+			$('#connect').removeAttr('disabled');
+			$('#connect').html('Connect');
+			if (success) {
+				// pass
+			} else {
+				status.show();
+				if (error == null) {
+					statusmsg.html('Could not connect to server');				
+				} else {
+					statusmsg.html(error);
+				}
+			}
+		})
 	});
 
 
