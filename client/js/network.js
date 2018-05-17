@@ -25,6 +25,7 @@ class Network {
 		}
 
 		this.sock.onmessage = function(message) {
+			console.log(message);
 			parent.handle(message.data.split('|'));
 		}
 	}
@@ -37,9 +38,7 @@ class Network {
 		this.sock.send(msg);
 	}
 
-	handle(message) {
-		console.log(message);
-	}
+	handle(message) {}
 
 	click(posn) {
 		this.sock.send(`CLICK:${posn.x}:${posn.y}`);

@@ -1,5 +1,3 @@
-var network;
-
 $(function() {
 
 	var connectiondiv = $('#connection');
@@ -11,7 +9,7 @@ $(function() {
 
 	var markers = markerdiv.children();
 	var children = board.children();
-	network = null;
+	var network = null;
 
 	board.hide();
 	markerdiv.hide();
@@ -39,7 +37,25 @@ $(function() {
 					statusmsg.html(error);
 				}
 			}
-		})
+		});
+
+		network.handle = function(msg) {
+			if (msg[0] == 'PLACE') {
+				colors = {
+					'1': 'red',
+					'2': 'blue'
+				}
+
+				var color = colors[msg[3]];
+				var posn = {
+					x: parseInt(msg[1]),
+					y: parseInt(msg[2])
+				};
+				console.log(posn, color);
+
+				placeDisk(posn, color);
+			}
+		}
 	});
 
 	children.each(function(idx, child) {
@@ -48,9 +64,8 @@ $(function() {
 
 	children.click(function(event) {
 		var posn = getCoord(event.target);
-		var col = Math.random() > 0.5 ? 'red' : 'blue';
 
-		placeDisk(posn, col);
+		network.send('PLACE', posn.x, posn.y);
 	});
 
 	children.mouseover(function(event) {
