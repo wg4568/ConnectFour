@@ -164,18 +164,18 @@ exports.Game = class {
 			this.red = user;
 			user.send('TEAM', exports.RED);
 
-			this.broadcast('PLAYERS', this.red ? 0 : 1, this.blue ? 0 : 1);
 		} else if (this.blue == null) {
 			this.blue = user;
 			user.send('TEAM', exports.BLUE);
 
-			this.broadcast('PLAYERS', this.red ? 0 : 1, this.blue ? 0 : 1);
 		} else {
 			this.spectators.push(user);
 			user.send('TEAM', exports.SPEC);
-
-			this.broadcast('SPEC', this.spectators.length);
 		}
+
+		this.broadcast('SPEC', this.spectators.length);
+		this.broadcast('TURN', this.turn);
+		this.broadcast('PLAYERS', this.red ? 1 : 0, this.blue ? 1 : 0);
 
 		var data = [];
 		this.grid.iterate(function(x, y, value) {
@@ -186,6 +186,21 @@ exports.Game = class {
 			}
 		});
 
+		console.log(data);
+
 		user.send('STATE', ...data);
+	}
+
+	disconnect(user) {
+		if (user == this.red)
+			this.red = null;
+		if (user == this.blue)
+			this.blue = null;
+
+		var idx = this.spectators.indexOf(user);
+		if (idx != -1) this.spectators.splice(idx, 1);
+
+		this.broadcast('SPEC', this.spectators.length);
+		this.broadcast('PLAYERS', this.red ? 0 : 1, this.blue ? 0 : 1);
 	}
 }

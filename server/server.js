@@ -5,9 +5,17 @@ const game = require('./game.js');
 
 const server = new websocket.Server({ port: 5500 });
 
-var g = new game.Game();
+var games = {};
 
 server.on('connection', function(conn) {
-	var c = new client.Client(conn);
-	g.connect(c);
+	var c = new client.Client(conn, function(client, name) {
+		if (name in games) {
+			games[name].connect(client);
+		} else {
+			games[name] = new game.Game();
+			games[name].connect(client);
+		}
+	});
+
+	console.log(games);
 });
