@@ -1,18 +1,26 @@
+var network;
+
 $(function() {
 
+	var gamearea = $('#gamearea');
+	var markers = $('#markers').children();
 	var connectiondiv = $('#connection');
-	var board = $('#board');
-	var markerdiv = $('#markers');
+
+	var children = $('#board').children();
 	
 	var status = $('#status');
 	var statusmsg = $('#message');
 
-	var markers = markerdiv.children();
-	var children = board.children();
-	var network = null;
+	network = null;
+	var team = null;
+	var turn = null;
+	var waiting = true;
+	var colors = {
+		'1': '#ff5959',
+		'2': '#6959ff'
+	};
 
-	board.hide();
-	markerdiv.hide();
+	gamearea.hide();
 	status.hide();
 
 	$('#connect').click(function() {
@@ -26,9 +34,12 @@ $(function() {
 			$('#connect').removeAttr('disabled');
 			$('#connect').html('Connect');
 			if (success) {
-				board.show();
-				markerdiv.show();
+				$('#lobby').html(game);
+
+				gamearea.show();
 				connectiondiv.hide();
+
+				network.send('JOIN', game);
 			} else {
 				status.show();
 				if (error == null) {
@@ -41,11 +52,6 @@ $(function() {
 
 		network.handle = function(msg) {
 			if (msg[0] == 'PLACE') {
-				colors = {
-					'1': 'red',
-					'2': 'blue'
-				}
-
 				var color = colors[msg[3]];
 				var posn = {
 					x: parseInt(msg[1]),
@@ -54,6 +60,50 @@ $(function() {
 				console.log(posn, color);
 
 				placeDisk(posn, color);
+			}
+
+			if (msg[0] == 'STATE') {
+				for (var i = 1; i < msg.length; i+=3) {
+
+					var color = colors[msg[i+2]];
+					var posn = {
+						x: parseInt(msg[i]),
+						y: parseInt(msg[i+1])
+					};
+
+					placeDisk(posn, color);
+
+				}
+			}
+
+			if (msg[0] == 'TEAM') {
+				team = msg[1];
+
+				if (team == 4) {
+					$('#tooltip').html('You are spectating');
+				}
+			}
+
+			if (msg[0] == 'TURN') {
+				turn = msg[1];
+			}
+
+			if (msg[0] == 'PLAYERS') {
+				if (msg[1] == 1 && team != 4) $('#tooltip').html('Waiting for opponent to join...');
+				
+				if (msg[1] == '1' && msg[2] == '1') waiting = false;
+			}
+
+			if (msg[0] == 'SPEC') {
+				$('#spec').html(msg[1]);
+			}
+
+			if (turn == team && !waiting && team != 4) {
+				$('#tooltip').html('It\'s your turn!');
+			}
+
+			if (turn != team && !waiting && team != 4) {
+				$('#tooltip').html('It\'s your opponents turn');
 			}
 		}
 	});

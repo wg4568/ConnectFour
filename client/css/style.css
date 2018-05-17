@@ -6,9 +6,18 @@
 	unicode-range: U+0370-03FF;
 }
 
-#connection {
+body {
 	font-family: 'Roboto', sans-serif;
 	margin: 20px;
+}
+
+#lobby {
+	color: #025900;
+}
+
+#tooltip {
+	color: #777777;
+	font-style: italic;
 }
 
 #status {
