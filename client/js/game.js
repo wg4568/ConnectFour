@@ -1,3 +1,5 @@
+var network;
+
 $(function() {
 
 	var connectiondiv = $('#connection');
@@ -9,23 +11,11 @@ $(function() {
 
 	var markers = markerdiv.children();
 	var children = board.children();
-	var network = null;
+	network = null;
 
 	board.hide();
 	markerdiv.hide();
 	status.hide();
-
-	// $('#game').keyup(function() {
-	// 	var value = $('#game').val();
-	// 	var button = $('#connect');
-		
-	// 	if (network.isGame(value)) {
-	// 		button.html("Connect to game");
-	// 	} else {
-	// 		button.html("Create new game");
-	// 	}
-
-	// });
 
 	$('#connect').click(function() {
 		var server = $('#server').val();
@@ -34,7 +24,7 @@ $(function() {
 		$('#connect').html('Connecting...');
 		$('#connect').attr('disabled', 'disabled')
 
-		network = new Network(server, function(success, network, error) {
+		network = new Network(server, game, function(success, network, error) {
 			$('#connect').removeAttr('disabled');
 			$('#connect').html('Connect');
 			if (success) {
@@ -51,9 +41,6 @@ $(function() {
 			}
 		})
 	});
-
-
-
 
 	children.each(function(idx, child) {
 		$(child).attr('index', idx);
